@@ -1,24 +1,28 @@
 import logo from './logo.svg';
 import './App.css';
+import {Layout} from 'antd';
+import { Image, Link, HStack ,StackDivider, Button} from '@chakra-ui/react';
+
+
+
+const { Content, Sider, Footer, Header } = Layout;
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Layout>
+      <Header>
+        <div  className='capHeader'>
+        <Image boxSize='100px' objectFit='cover' src='./capybaralogo-white-bg.png' id='capybaraLogo'/>
+        <Button id={'connectWalletButton'}>
+            Connect Wallet
+        </Button>
+        </div>
+      </Header>
+      <Content id={'capContent'}>
+        
+      </Content>
+    </Layout>
   );
 }
 
