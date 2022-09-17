@@ -1,2 +1,3 @@
 pastblock/node_modules/
 pastblock/package-lock.json
+*.csv
