@@ -2,3 +2,4 @@ pastblock/node_modules/
 pastblock/package-lock.json
 *.csv
 *.json
+!package.json
