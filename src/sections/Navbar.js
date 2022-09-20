@@ -2,24 +2,32 @@ import { ReactNode } from 'react';
 import {
   Box,
   Flex,
-  Avatar,
   HStack,
   Link,
   IconButton,
   Button,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
   useDisclosure,
   useColorModeValue,
   Stack,
   Image,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+import { handleConnectWallet } from "../utils/WalletConnect";
 
-const Links = ['Menu', 'Docs', 'Deledate'];
+const routes = [
+    {
+      'page': 'Menu',
+      'link': '/'
+    },
+    {
+      'page': 'Docs',
+      'link': '/docs'
+    },
+    {
+      'page': 'Delegate',
+      'link': '/delegate'
+    }
+  ]
 
 const NavLink = ({ children }: { children: ReactNode }) => (
   <Link
@@ -30,12 +38,14 @@ const NavLink = ({ children }: { children: ReactNode }) => (
       textDecoration: 'none',
       bg: useColorModeValue('gray.200', 'gray.700'),
     }}
-    href={'#'}>
-    {children}
+    href={children.link}
+    color="#212121">
+    {children.page}
   </Link>
 );
 
-export default function Simple() {
+export default function Simple({ account, setAccount, web3modal, setWeb3modal, provider, setProvider }) {
+  // State var for hamburger button
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -49,6 +59,7 @@ export default function Simple() {
             display={{ md: 'none' }}
             onClick={isOpen ? onClose : onOpen}
           />
+          {/* Nav links mapping */}
           <HStack spacing={8} alignItems={'center'}>
             <Box>
               <Image src="./capybaralogo-white-bg.png" width="60px" height="60px" />
@@ -57,38 +68,44 @@ export default function Simple() {
               as={'nav'}
               spacing={4}
               display={{ base: 'none', md: 'flex' }}>
-              {Links.map((link) => (
+              {routes.map((link) => (
                 <NavLink key={link}>{link}</NavLink>
               ))}
             </HStack>
           </HStack>
           <Flex alignItems={'center'}>
-            <Menu>
-              <MenuButton
-                as={Button}
-                rounded={'full'}
-                variant={'link'}
-                cursor={'pointer'}
-                minW={0}
-                bgColor="#2B2D3C"
-                padding={4}
-                color={"#FEFEFE"}>
-                Connect Wallet
-              </MenuButton>
-              <MenuList>
-                <MenuItem>Link 1</MenuItem>
-                <MenuItem>Link 2</MenuItem>
-                <MenuDivider />
-                <MenuItem>Link 3</MenuItem>
-              </MenuList>
-            </Menu>
+            { account?
+                <>
+                  <Button bgColor={"#2B2D3C"} color="#FEFEFE" borderRadius={"2rem"} onClick={
+                    async ()=>{
+                      await web3modal.clearCachedProvider();
+                      window.localStorage.clear();
+                      setAccount(undefined);
+                      setProvider();
+                    }
+                  }>Disconnect</Button>
+                  </>:
+                <>
+                  <Button bgColor={"#2B2D3C"} color="#FEFEFE" borderRadius={"2rem"} onClick={
+                    () => {
+                      handleConnectWallet({
+                        setAccount,
+                        setWeb3modal,
+                        setProvider,
+                        // setCanMint,
+                        // canMint
+                      })
+                    }
+                  }>Connect Wallet</Button>
+                </>
+              }
           </Flex>
         </Flex>
 
         {isOpen ? (
           <Box pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
-              {Links.map((link) => (
+              {routes.map((link) => (
                 <NavLink key={link}>{link}</NavLink>
               ))}
             </Stack>
